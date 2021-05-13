@@ -221,9 +221,9 @@ export const useCurrentLine = (
       {mobileInput}
       <div className={style.lineText}>
         {consoleFocused && caret ? ( //if caret isn't true, caret won't be displayed
-          <span className={style.caret}>
+          <div className={style.caret}>
             <span className={style.caretAfter} style={{ background: themeStyles.themeColor }} />
-          </span>
+          </div>
         ) : null}
       </div>
     </>
