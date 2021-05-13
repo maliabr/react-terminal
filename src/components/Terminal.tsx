@@ -27,6 +27,7 @@ export default function Terminal(props: any) {
     commands,
     welcomeMessage,
     errorMessage,
+    defaultExecutor,
     enableInput //enableInput prop
   } = props;
 
@@ -48,6 +49,7 @@ export default function Terminal(props: any) {
           prompt={prompt}
           commands={commands}
           welcomeMessage={welcomeMessage}
+          defaultExecutor={defaultExecutor}
           errorMessage={errorMessage}
           enableInput={enableInput} //enableInput prop
         />
@@ -57,12 +59,13 @@ export default function Terminal(props: any) {
 }
 
 Terminal.propTypes = {
-  enableInput:PropTypes.bool,  //added both props with their types
+  enableInput: PropTypes.bool,  //added both props with their types
   caret: PropTypes.bool,
   theme: PropTypes.string,
   showControlButtons: PropTypes.bool,
   controlButtonLabels: PropTypes.arrayOf(PropTypes.string),
   prompt: PropTypes.string,
+  defaultExecutor: PropTypes.func,
   commands: PropTypes.objectOf(PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.func,
@@ -80,6 +83,7 @@ Terminal.defaultProps = {
   controlButtonLabels: ["close", "minimize", "maximize"],
   prompt: ">>>",
   commands: {},
+  defaultExecutor: null,
   welcomeMessage: "",
   errorMessage: "not found!",
 };

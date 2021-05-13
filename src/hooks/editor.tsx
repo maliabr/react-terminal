@@ -19,7 +19,7 @@ export const useEditorInput = (
       return;
     }
     //checks the value of enableInput and returns if its false
-    if(!enableInput){
+    if (!enableInput) {
       return;
     }
     event.preventDefault();
@@ -41,8 +41,8 @@ export const useEditorInput = (
       nextInput = getNextCommand();
     } else {
       nextInput = eventKey && eventKey.length === 1
-          ? editorInput + eventKey
-          : editorInput;
+        ? editorInput + eventKey
+        : editorInput;
     }
 
     setEditorInput(nextInput);
@@ -66,6 +66,7 @@ export const useBufferedContent = (
   currentText: any,
   setCurrentText: any,
   commands: any,
+  defaultExecutor: any,
   errorMessage: any
 ) => {
   const { bufferedContent, setBufferedContent } = React.useContext(TerminalContext);
@@ -83,11 +84,11 @@ export const useBufferedContent = (
         const [command, ...rest] = text.trim().split(" ");
         let output = "";
 
-        if(command === "clear") {
+        if (command === "clear") {
           setBufferedContent("");
           setCurrentText("");
           setProcessCurrentLine(false);
-          return 
+          return
         }
 
         const waiting = (
@@ -101,7 +102,7 @@ export const useBufferedContent = (
         setBufferedContent(waiting);
         setCurrentText("");
 
-        
+
         if (text) {
           const commandArguments = rest.join(" ");
 
@@ -113,7 +114,10 @@ export const useBufferedContent = (
             } else {
               output = executor;
             }
-          } else if (typeof errorMessage === "function") {
+          } else if (defaultExecutor) {
+            output = await defaultExecutor(command, commandArguments);
+          }
+          else if (typeof errorMessage === "function") {
             output = await errorMessage(commandArguments);
           } else {
             output = errorMessage;
@@ -151,6 +155,7 @@ export const useCurrentLine = (
   prompt: string,
   commands: any,
   errorMessage: any,
+  defaultExecutor: any,
   enableInput: boolean  //enableInput parameter
 ) => {
   const style = React.useContext(StyleContext);
@@ -159,7 +164,7 @@ export const useCurrentLine = (
   const mobileInputRef = React.useRef(null);
   const [editorInput, setEditorInput] = React.useState("");
   const [processCurrentLine, setProcessCurrentLine] = React.useState(false);
-  
+
   React.useEffect(
     () => {
       if (!isMobile) {
@@ -183,7 +188,7 @@ export const useCurrentLine = (
     [processCurrentLine]
   );
 
-  const mobileInput = isMobile && enableInput? (//enableInput functionality on mobile
+  const mobileInput = isMobile && enableInput ? (//enableInput functionality on mobile
     <div className={style.mobileInput}>
       <input
         type="text"
@@ -205,7 +210,7 @@ export const useCurrentLine = (
       <div className={style.lineText}>
         <span className={style.preWhiteSpace}>{editorInput}</span>
         {consoleFocused && caret ? (  //if caret isn't true, caret won't be displayed
-          <span className={style.caret}> 
+          <span className={style.caret}>
             <span className={style.caretAfter} style={{ background: themeStyles.themeColor }} />
           </span>
         ) : null}
@@ -215,7 +220,7 @@ export const useCurrentLine = (
     <>
       {mobileInput}
       <div className={style.lineText}>
-        {consoleFocused && caret? ( //if caret isn't true, caret won't be displayed
+        {consoleFocused && caret ? ( //if caret isn't true, caret won't be displayed
           <span className={style.caret}>
             <span className={style.caretAfter} style={{ background: themeStyles.themeColor }} />
           </span>
@@ -239,6 +244,7 @@ export const useCurrentLine = (
     editorInput,
     setEditorInput,
     commands,
+    defaultExecutor,
     errorMessage
   );
 

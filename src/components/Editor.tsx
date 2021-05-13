@@ -22,6 +22,7 @@ export default function Editor(props: any) {
     consoleFocused,
     prompt,
     commands,
+    defaultExecutor,
     welcomeMessage,
     errorMessage
   } = props;
@@ -31,7 +32,8 @@ export default function Editor(props: any) {
     consoleFocused,
     prompt,
     commands,
-    errorMessage, 
+    errorMessage,
+    defaultExecutor,
     enableInput //enableInput prop as a parameter
   );
 
